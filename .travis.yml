@@ -1,0 +1,21 @@
+# TravisCI configuration
+# ----------------------
+# Whenever we commit to our GitHub, TravisCI will be notified about the new update and receive
+# a clone of the current code. Then it will run the following instructions below.
+
+# Whenever we use Docker, we need kernel level access (sudo activates it)
+sudo: required
+services:
+  - docker
+
+# Series of commands before the server launches
+# We need to build the Docker image before launching it
+before_install:
+  # -t allows us to tag our image instance (we can know refer to it as 'russellgoldman/docker-react')
+  # -f allows us to specify a custom Dockerfile and . is the current directory (where the Dockerfile is found)
+  - docker build -t russellgoldman/docker-react -f Dockerfile.dev .
+
+# TravisCI will be watching these scripts, if any of these commands return an exit code other than 0, it will assume that the program cannot be run
+script:
+  ## '-- --coverage' runs the script and completes execution ASAP (good for programs that usually wait on user input forever)
+  - docker run russellgoldman/docker-react npm run test -- --coverage

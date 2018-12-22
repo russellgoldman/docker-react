@@ -1,4 +1,4 @@
-# Alphine version of Node image
+# alpine version of Node image
 FROM node:alpine
 
 # working directory on the node:alpine image
