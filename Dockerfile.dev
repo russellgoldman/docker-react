@@ -1,0 +1,15 @@
+# Alphine version of Node image
+FROM node:alpine
+
+# working directory on the node:alpine image
+WORKDIR '/app'
+
+# copy package.json
+COPY package.json .
+# download any new depencencies
+RUN npm install
+
+# copy everything (if no new dependencies, let us use previous dependency cache)
+COPY . .
+
+CMD ["npm", "run", "start"]

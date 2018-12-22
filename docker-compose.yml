@@ -1,0 +1,21 @@
+# When we run `docker-compose up`, it will run two servers, 'web' and 'tests'
+
+version: '3'
+services:
+  web:
+    build:
+      context: .            # whatever the working directory is (our current directory is)
+      dockerfile: Dockerfile.dev    # look in the current working directory and find this file
+    ports: 
+      - "3000:3000"
+    volumes:                # we are treating the /app folder as the storage place for our local files in our container image
+      - /app/node_modules   # do not try to reference this folder in the Docker container
+      - .:/app              # map the current folder outside the container to the app folder within the Docker container
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:                # restricted files
+      - /app/node_modules   # make sure we don't accidentally overwrite that directory
+      - .:/app              # protect the app folder
+    command: ["npm", "run", "test"]
